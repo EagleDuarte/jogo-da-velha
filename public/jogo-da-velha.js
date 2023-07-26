@@ -5,7 +5,7 @@ let reiniciarBtn = document.getElementById("reiniciar");
 let msgRef = document.getElementById("mensagem");
 
 //Padrao/Array de vitoria
-let winningPattern = [
+let PadraoParaVencer = [
   [0, 1, 2],
   [0, 3, 6],
   [2, 5, 8],
@@ -36,17 +36,17 @@ const enableButtons = () => {
 };
 
 //Funcao executado quando um dos jogadores vence
-const winFunction = (letter) => {
+const funcaoVitoria = (letter) => {
   disableButtons();
   if (letter == "X") {
-    msgRef.innerHTML = "&#x2B50; <br> X VENCEU!";
+    msgRef.innerHTML = "&#x2B50; <br> X - VENCEU!";
   } else {
-    msgRef.innerHTML = "&#x2B50; <br> 'O' VENCEU!";
+    msgRef.innerHTML = "&#x2B50; <br> O - VENCEU!";
   }
 };
 
 //Funcao para empate
-const drawFunction = () => {
+const FuncaoEmpate = () => {
   disableButtons();
   msgRef.innerHTML = "&#x274C; <br> Vish, empatou!";
 };
@@ -63,7 +63,7 @@ reiniciarBtn.addEventListener("click", () => {
 
 //Logica de vitoria
 const verificaVitoria = () => {
-  for (let i of winningPattern) {
+  for (let i of PadraoParaVencer) {
     let [element1, element2, element3] = [
       btnRef[i[0]].innerText,
       btnRef[i[1]].innerText,
@@ -71,7 +71,7 @@ const verificaVitoria = () => {
     ];
     if (element1 != "" && (element2 != "") & (element3 != "")) {
       if (element1 == element2 && element2 == element3) {
-        winFunction(element1);
+        funcaoVitoria(element1);
       }
     }
   }
@@ -91,7 +91,7 @@ btnRef.forEach((element) => {
     //Incrementa contagem a cada clique
     count += 1;
     if (count == 9) {
-      drawFunction();
+      FuncaoEmpate();
     }
     verificaVitoria();
   });
