@@ -1,10 +1,19 @@
-let btnRef = document.querySelectorAll(".opcao-botao");
-let popupRef = document.querySelector(".popup");
-let newgameBtn = document.getElementById("jogar-novamente");
-let reiniciarBtn = document.getElementById("reiniciar");
-let msgRef = document.getElementById("mensagem");
+// Seleciona todos os botões do jogo da velha com a classe "opcao-botao"
+let botoesDoJogo = document.querySelectorAll(".opcao-botao");
 
-//Padrao/Array de vitoria
+// Seleciona o elemento com a classe "popup" (provavelmente usado para exibir mensagens)
+let mensagemPopup = document.querySelector(".popup");
+
+// Seleciona o botão com o id "jogar-novamente"
+let botaoJogarNovamente = document.getElementById("jogar-novamente");
+
+// Seleciona o botão com o id "reiniciar"
+let botaoReiniciar = document.getElementById("reiniciar");
+
+// Seleciona o elemento com o id "mensagem" (onde são exibidas mensagens de vitória ou empate)
+let elementoMensagem = document.getElementById("mensagem");
+
+// Array de arrays que define os padrões de vitória no jogo da velha
 let PadraoParaVencer = [
   [0, 1, 2],
   [0, 3, 6],
@@ -16,58 +25,62 @@ let PadraoParaVencer = [
   [2, 4, 6],
 ];
 
-//O jogador 'X' jogara primeiro
+// Variável booleana que indica se é a vez do jogador 'X' jogar (true) ou do jogador 'O' jogar (false)
 let xTurn = true;
+
+// Contador para acompanhar o número de jogadas realizadas
 let count = 0;
 
-//Desabilita todos botoes
-const disableButtons = () => {
-  btnRef.forEach((element) => (element.disabled = true));
-  popupRef.classList.remove("hide");
+// Função para desabilitar todos os botões do jogo e mostrar a mensagem de vitória/empate
+const disabilitaBotoes = () => {
+  botoesDoJogo.forEach((element) => (element.disabled = true));
+  mensagemPopup.classList.remove("hide");
 };
 
-//Habilita todos botoes (para iniciar e reiniciar)
-const enableButtons = () => {
-  btnRef.forEach((element) => {
+// Função para habilitar todos os botões do jogo (para iniciar e reiniciar) e limpar seus conteúdos
+const habilitarBotoesDoJogo = () => {
+  botoesDoJogo.forEach((element) => {
     element.innerText = "";
     element.disabled = false;
   });
-  popupRef.classList.add("hide");
+  mensagemPopup.classList.add("hide");
 };
 
-//Funcao executado quando um dos jogadores vence
+// Função executada quando um dos jogadores vence o jogo
 const funcaoVitoria = (letter) => {
-  disableButtons();
+  disabilitaBotoes();
   if (letter == "X") {
-    msgRef.innerHTML = "&#x2B50; <br> X - VENCEU!";
+    elementoMensagem.innerHTML = "&#x2B50; <br> X - VENCEU!";
   } else {
-    msgRef.innerHTML = "&#x2B50; <br> O - VENCEU!";
+    elementoMensagem.innerHTML = "&#x2B50; <br> O - VENCEU!";
   }
 };
 
-//Funcao para empate
+// Função executada quando o jogo termina em empate
 const FuncaoEmpate = () => {
-  disableButtons();
-  msgRef.innerHTML = "&#x274C; <br> Vish, empatou!";
+  disabilitaBotoes();
+  elementoMensagem.innerHTML = "&#x274C; <br> Vish, empatou!";
 };
 
-//Jogar novamente
-newgameBtn.addEventListener("click", () => {
+// Event listener para o botão "Jogar Novamente"
+botaoJogarNovamente.addEventListener("click", () => {
   count = 0;
-  enableButtons();
-});
-reiniciarBtn.addEventListener("click", () => {
-  count = 0;
-  enableButtons();
+  habilitarBotoesDoJogo();
 });
 
-//Logica de vitoria
+// Event listener para o botão "Reiniciar"
+botaoReiniciar.addEventListener("click", () => {
+  count = 0;
+  habilitarBotoesDoJogo();
+});
+
+// Função para verificar se algum dos padrões de vitória foi atingido
 const verificaVitoria = () => {
   for (let i of PadraoParaVencer) {
     let [element1, element2, element3] = [
-      btnRef[i[0]].innerText,
-      btnRef[i[1]].innerText,
-      btnRef[i[2]].innerText,
+      botoesDoJogo[i[0]].innerText,
+      botoesDoJogo[i[1]].innerText,
+      botoesDoJogo[i[2]].innerText,
     ];
     if (element1 != "" && (element2 != "") & (element3 != "")) {
       if (element1 == element2 && element2 == element3) {
@@ -77,7 +90,8 @@ const verificaVitoria = () => {
   }
 };
 
-btnRef.forEach((element) => {
+// Event listeners para os botões do jogo
+botoesDoJogo.forEach((element) => {
   element.addEventListener("click", () => {
     if (xTurn) {
       xTurn = false;
@@ -88,12 +102,16 @@ btnRef.forEach((element) => {
       element.innerText = "O";
       element.disabled = true;
     }
-    //Incrementa contagem a cada clique
+    // Incrementa o contador a cada clique
     count += 1;
+    // Verifica se o jogo terminou em empate
     if (count == 9) {
       FuncaoEmpate();
     }
+    // Verifica se algum dos jogadores venceu
     verificaVitoria();
   });
 });
-window.onload = enableButtons;
+
+// Executa a função habilitarBotoesDoJogo() quando a página é carregada para habilitar os botões inicialmente
+window.onload = habilitarBotoesDoJogo;
